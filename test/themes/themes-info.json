@@ -1,0 +1,11 @@
+[
+  {
+    "_id": "advanced-rest-client/arc-electron-default-theme",
+    "name": "@advanced-rest-client/arc-electron-default-theme",
+    "version": "2.0.0-preview",
+    "location": "test/themes/@advanced-rest-client/arc-electron-default-theme",
+    "mainFile": "test/themes/@advanced-rest-client/arc-electron-default-theme/arc-electron-default-theme.html",
+    "title": "@advanced-rest-client/arc-electron-default-theme",
+    "description": "A default theme definition for API console"
+  }
+]
