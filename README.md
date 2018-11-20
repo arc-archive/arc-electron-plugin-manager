@@ -1,55 +1,44 @@
-# ARC Electron sources manager
+# ARC Electron plug-in manager
 
-Resolves paths to application source files and themes based on theme.
+Manages ARC application plug-ins.
+
+Currently only themes manager is supported.
 
 ## Usage
 
 ```
-$ npm i @advanced-rest-client/electron-drive
+$ npm i @advanced-rest-client/arc-electron-plugin-manager
 ```
 
 In the main process:
 
 ```javascript
-const {SourcesManager} = require('@advanced-rest-client/arc-electron-plugin-manager/main');
-const {ArcPreferences} = require('@advanced-rest-client/arc-electron-preferences');
-const startupOptions = {}; // Application start up options.
-const prefs = new ArcPreferences();
-const manager = new SourcesManager(prefs, startupOptions);
-manager.listen();
+const {ThemePluginsManager} = require('@advanced-rest-client/arc-electron-plugin-manager/main');
+
+const manager = new ThemePluginsManager();
+
+// installing themes
+await manager.inastall('npm-package-name', 'version');
+await manager.inastall('github-owner/github-repo', 'branch/tag/hash');
+await manager.inastall('/my/local/package');
+
+// Uninstalling themes
+await manager.uninstall('npm-package-name');
+await manager.uninstall('github-owner/github-repo');
+await manager.uninstall('/my/local/package');
+
+// Check for an update of a specific package
+const into = await manager.checkUpdateAvailable('npm-package-name');
+if (info) {
+  // update available.
+}
+
+// Check for any update
+const infoMap = await manager.checkForUpdates();
+if (Object.keys(infoMap).length) {
+  // updates are available
+}
+
+// Update list of packages
+await manager.update(infoMap);
 ```
-
-To get paths configuration for the renderer window
-
-```javascript
-prefs.getAppConfig()
-.then((config) => {
-  console.log(config);
-  // {
-  //  "appComponents": "Location to app component main directory",
-  //  "importFile": "Location of the app sources import file"
-  //  "themeFile": "Location of theme definition"
-  // }
-});
-```
-
-## Renderer process
-
-```javascript
-const {ThemeManager} = require('@advanced-rest-client/arc-electron-plugin-manager/renderer');
-const mgr = new ThemeManager();
-mgr.listen();
-```
-
-The manager gives access to:
-
--   `listThemes()` - lists all installed themes
--   `readActiveThemeInfo()` - reads activated theme info
--   `activate(themeId)` - Activates new theme
--   `loadTheme(themeLocation)` - Loads theme file and activates it.
-
-It listens for the following web custom events:
-
--   `themes-list` - calls `listThemes()`, adds call result to `detail.result`
--   `theme-active-info` - calls `readActiveThemeInfo()`, adds call result to `detail.result`
--   `theme-activate` - calls `activate(event.detail.theme)`, adds call result to `detail.result`
